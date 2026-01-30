@@ -588,6 +588,12 @@ create_conditional_jump m_jle, mc_le
     int $0x80
 .endm
 
+.macro m_loop label
+    m_dec mcx
+    m_cmp $0, mcx
+    m_je label
+.endm
+
 # Arrays
 
 # PROGRAM
@@ -595,7 +601,13 @@ main:
 
     # MAIN START
 
+        m_mov $0x2, max
+    m_mov $0x00000001, mdx
+    m_mov $2, mbx
+    m_div_a mbx
+    m_label et_exit
     
+
 
     # MAIN END
 

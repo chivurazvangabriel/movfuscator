@@ -194,7 +194,7 @@ def process_s_file(input_path, output_path):
         # Carve Main
         found_main = False
         for line in data:
-            if "main:" in line:
+            if "main:" in line or "_start:" in line:
                 found_main = True
                 continue
 
