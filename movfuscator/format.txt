@@ -560,6 +560,24 @@ create_conditional_jump m_jle, mc_le
     dbg_endl
 .endm
 
+#SYSCALLS
+
+.macro m_int_exit
+    m_end
+.endm
+
+.macro m_int_print_string string, length
+    m_set_f mi1, $20
+    m_set mi1, $4
+    mov mi1, %eax
+    mov $1, %ebx
+    mov $\string\(), %ecx
+    mov \length\(), %edx
+    int $0x80
+.endm
+
+# Arrays
+
 # PROGRAM
 main:
 
