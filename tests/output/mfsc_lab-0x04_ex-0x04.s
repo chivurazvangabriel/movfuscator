@@ -258,14 +258,27 @@ label printf, 200
 #
 var_decl_start:
 
-{VARS}
+var v, 26,
+var n, 9
+formatAfisare: .asciz "Numarul
+
 
 #
 # User defined labels
 #
 
-{LABELS}
-{FUNCTION_RA}
+label et_tablou_frecv, 0
+label et_parcurgere, 1
+label et_cautare, 2
+label et_cont_parcurgere, 3
+label afisare, 4
+label et_exit, 5
+
+label printf_ra0, 6
+label fflush_ra1, 7
+label printf_ra2, 8
+label printf_ra3, 9
+
 
 
 .text
@@ -593,7 +606,47 @@ main:
 
     # MAIN START
 
-    {MAIN}
+        m_movl n, mcx
+    m_lea v, mdi
+    m_xor_al max, max
+    m_label et_tablou_frecv
+    m_cmp $0, mcx
+    m_je et_parcurgere
+    m_movl (%edi%eax4), mbx
+    m_lea frecv, msi
+    m_movl (%esi%ebx4), mdx
+    m_add_al $1, mdx
+    m_movl mdx, (%esi%ebx4)
+    m_incl max
+    m_decl mcx
+    m_jmp et_tablou_frecv
+    m_label et_parcurgere
+    m_movl $0, max
+    m_movl $0, mbx
+    m_movl $0, mdx
+    m_lea frecv, msi
+    m_label et_cautare
+    m_cmp $100, max
+    m_jg afisare
+    m_movl (%esi%eax4), mcx
+    m_cmp mdx, mcx
+    m_jle et_cont_parcurgere
+    m_movl mcx, mdx
+    m_movl max, mbx
+    m_label et_cont_parcurgere
+    m_incl max
+    m_jmp et_cautare
+    m_label afisare
+    m_pushl mbx
+    m_pushl $formatAfisare
+    m_call printf, printf_ra3
+    m_add_al $2, msp
+    m_label et_exit
+    m_movl $1, max
+    m_xor_al mbx, mbx
+    m_int $0x80
+    
+
 
     # MAIN END
 

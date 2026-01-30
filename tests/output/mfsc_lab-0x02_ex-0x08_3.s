@@ -258,14 +258,20 @@ label printf, 200
 #
 var_decl_start:
 
-{VARS}
+var n, 10
+var t0, 0
+var t1, 5
+var t2, 2
+
 
 #
 # User defined labels
 #
 
-{LABELS}
-{FUNCTION_RA}
+label et_loop, 0
+label et_exit, 1
+
+
 
 
 .text
@@ -593,7 +599,26 @@ main:
 
     # MAIN START
 
-    {MAIN}
+        m_mov n, mcx
+    m_sub_al $3, mcx
+    m_label et_loop
+    m_cmpl $0, mcx
+    m_je et_exit
+    m_mov t0, max
+    m_add_a t1, max
+    m_add_a t2, max
+    m_mov t1, mdx
+    m_mov mdx, t0
+    m_mov t2, mdx
+    m_mov mdx, t1
+    m_mov max, t2
+    m_loop et_loop
+    m_label et_exit
+    m_mov $1, max
+    m_xor_a mbx, mbx
+    m_int $0x80
+    
+
 
     # MAIN END
 

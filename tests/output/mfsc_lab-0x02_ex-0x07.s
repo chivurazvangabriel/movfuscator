@@ -258,14 +258,20 @@ label printf, 200
 #
 var_decl_start:
 
-{VARS}
+a: .ascii "Assembly"
+var b, 0x25
+c: .asciz "x86"
+d: .asciz ";;;"
+var e, 0x15
+
 
 #
 # User defined labels
 #
 
-{LABELS}
-{FUNCTION_RA}
+label _start, 0
+
+
 
 
 .text
@@ -593,7 +599,7 @@ main:
 
     # MAIN START
 
-    {MAIN}
+    
 
     # MAIN END
 

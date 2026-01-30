@@ -258,14 +258,22 @@ label printf, 200
 #
 var_decl_start:
 
-{VARS}
+var n, 5234
+var s, 0
+formatAfSuma: .ascii "Suma
+
 
 #
 # User defined labels
 #
 
-{LABELS}
-{FUNCTION_RA}
+label et_loop, 0
+label et_afisare, 1
+label et_exit, 2
+
+label printf_ra0, 3
+label fflush_ra1, 4
+
 
 
 .text
@@ -593,7 +601,32 @@ main:
 
     # MAIN START
 
-    {MAIN}
+        m_movl n, mcx
+    m_movl $10, mbx
+    m_label et_loop
+    m_cmp $0, mcx
+    m_je et_afisare
+    m_movl mcx, max
+    m_xor_al mdx, mdx
+    m_div_al mbx
+    m_add_al mdx, s
+    m_movl max, mcx
+    m_jmp et_loop
+    m_label et_afisare
+    m_pushl s
+    m_push $formatAfSuma
+    m_call printf, printf_ra0
+    m_popl mbx
+    m_popl mbx
+    m_pushl stdout
+    m_call fflush, fflush_ra1
+    m_add_al $1, msp
+    m_label et_exit
+    m_movl $1, max
+    m_xor_al mbx, mbx
+    m_int $0x80
+    
+
 
     # MAIN END
 

@@ -258,14 +258,16 @@ label printf, 200
 #
 var_decl_start:
 
-{VARS}
+
 
 #
 # User defined labels
 #
 
-{LABELS}
-{FUNCTION_RA}
+label _start, 0
+label et_exit, 1
+
+
 
 
 .text
@@ -593,7 +595,7 @@ main:
 
     # MAIN START
 
-    {MAIN}
+    
 
     # MAIN END
 

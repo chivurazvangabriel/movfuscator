@@ -258,14 +258,18 @@ label printf, 200
 #
 var_decl_start:
 
-{VARS}
+
 
 #
 # User defined labels
 #
 
-{LABELS}
-{FUNCTION_RA}
+label et_loop, 0
+label et_next, 1
+label et_zero, 2
+label et_exit, 3
+
+
 
 
 .text
@@ -593,7 +597,32 @@ main:
 
     # MAIN START
 
-    {MAIN}
+        m_movl $0b11011111111110111111, max, ;, 0b, este, folosit, pentru, baza, 2
+    m_xor_al mbx, mbx
+    m_xor_al mcx, mcx, ;, daca, aplicam, xor, intre, o, valoare, si, ea, insasi, obtinem, 0;, asadar, aceasta, linie, este, echivalenta, cu, mov, $0, mcx
+    m_movl $32, mdx
+    m_label et_loop
+    m_testl $1, max
+    m_jz et_zero
+    m_incl mcx
+    m_cmpl mbx, mcx
+    m_jle et_next
+    m_movl mcx, mbx
+    m_label et_next
+    m_shrl $1, max
+    m_decl mdx
+    m_jnz et_loop
+    m_jmp et_exit
+    m_label et_zero
+    m_xor_al mcx, mcx
+    m_jmp et_next
+    m_label et_exit
+    m_movl mbx, max
+    m_movl $1, mbx
+    m_movl $1, max
+    m_int $0x80
+    
+
 
     # MAIN END
 

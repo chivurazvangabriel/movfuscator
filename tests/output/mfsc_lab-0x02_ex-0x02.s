@@ -258,14 +258,16 @@ label printf, 200
 #
 var_decl_start:
 
-{VARS}
+
 
 #
 # User defined labels
 #
 
-{LABELS}
-{FUNCTION_RA}
+label greater_or_equal, 0
+label end, 1
+
+
 
 
 .text
@@ -593,7 +595,19 @@ main:
 
     # MAIN START
 
-    {MAIN}
+        m_movl $0, mcx
+    m_movl $3, max
+    m_movl $5, mbx
+    m_cmp mbx, max
+    m_jge greater_or_equal
+    m_movl $1, mcx
+    m_jmp end
+    m_label greater_or_equal
+    m_movl $2, mcx
+    m_label end
+    m_end 
+    
+
 
     # MAIN END
 

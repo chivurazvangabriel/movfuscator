@@ -258,14 +258,16 @@ label printf, 200
 #
 var_decl_start:
 
-{VARS}
+
 
 #
 # User defined labels
 #
 
-{LABELS}
-{FUNCTION_RA}
+label et_1, 0
+label et_exit, 1
+
+
 
 
 .text
@@ -593,7 +595,18 @@ main:
 
     # MAIN START
 
-    {MAIN}
+        m_mov $0xff67ffff, mcx
+    m_mov $0x5263dfaa, max
+    m_cmp mcx, max
+    m_jge et_exit
+    m_label et_1
+    m_mov $4, mcx
+    m_label et_exit
+    m_mov $1, max
+    m_xor_a mbx, mbx
+    m_int $0x80
+    
+
 
     # MAIN END
 

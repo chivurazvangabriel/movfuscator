@@ -258,14 +258,17 @@ label printf, 200
 #
 var_decl_start:
 
-{VARS}
+str1: .ascii "ASC"
+var str2, 0X31323334
+
 
 #
 # User defined labels
 #
 
-{LABELS}
-{FUNCTION_RA}
+label _start, 0
+
+
 
 
 .text
@@ -593,7 +596,7 @@ main:
 
     # MAIN START
 
-    {MAIN}
+    
 
     # MAIN END
 

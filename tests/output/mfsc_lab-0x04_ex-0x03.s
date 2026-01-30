@@ -258,14 +258,27 @@ label printf, 200
 #
 var_decl_start:
 
-{VARS}
+var v, 26,
+var n, 9
+var max1, 0
+var max2, 0
+formatAf: .ascii "%ld\n"
+
 
 #
 # User defined labels
 #
 
-{LABELS}
-{FUNCTION_RA}
+label et_parcurgere, 0
+label verifica_max2, 1
+label et_cont_parcurgere, 2
+label et_afisare, 3
+label et_exit, 4
+
+label printf_ra0, 5
+label fflush_ra1, 6
+label printf_ra2, 7
+
 
 
 .text
@@ -593,7 +606,44 @@ main:
 
     # MAIN START
 
-    {MAIN}
+        m_movl n, mcx
+    m_lea v, mdi
+    m_xor_al max, max
+    m_label et_parcurgere
+    m_cmp $0, mcx
+    m_je et_afisare
+    m_movl (%edi%eax4), mdx
+    m_movl max1, mbx
+    m_cmp mbx, mdx
+    m_jle verifica_max2
+    m_movl mbx, max2
+    m_movl mdx, max1
+    m_jmp et_cont_parcurgere
+    m_label verifica_max2
+    m_movl max2, mbx
+    m_cmp mbx, mdx
+    m_jle et_cont_parcurgere
+    m_movl max1, msi
+    m_cmp msi, mdx
+    m_jge et_cont_parcurgere
+    m_movl mdx, max2
+    m_label et_cont_parcurgere
+    m_incl max
+    m_decl mcx
+    m_jmp et_parcurgere
+    m_label et_afisare
+    m_movl max2, mdx
+    m_pushl max2
+    m_pushl $formatAf
+    m_call printf, printf_ra2
+    m_popl mbx
+    m_popl mbx
+    m_label et_exit
+    m_movl $1, max
+    m_xor_al mbx, mbx
+    m_int $0x80
+    
+
 
     # MAIN END
 

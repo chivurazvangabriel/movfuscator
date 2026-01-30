@@ -258,14 +258,18 @@ label printf, 200
 #
 var_decl_start:
 
-{VARS}
+x1: .ascii "maria"
+x2: .ascii "maria1"
+x3: .ascii "maria2"
+
 
 #
 # User defined labels
 #
 
-{LABELS}
-{FUNCTION_RA}
+label end, 0
+
+
 
 
 .text
@@ -593,7 +597,11 @@ main:
 
     # MAIN START
 
-    {MAIN}
+        m_int_print_string x1, $14
+    m_label end
+    m_end 
+    
+
 
     # MAIN END
 

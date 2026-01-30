@@ -1,4 +1,5 @@
 import re
+from pathlib import Path
 
 function_ras = []
 
@@ -83,7 +84,9 @@ def refactor_syscalls(lines):
     
     # 1. Join the list into a single string to handle multi-line patterns easily
     # We use '\n' to ensure lines are separated correctly
-    content = "\n".join(lines)
+    content = "".join(lines)
+
+    print(content)
     
     # 2. Define Regex Patterns
     
@@ -103,9 +106,15 @@ def refactor_syscalls(lines):
     # EXIT PATTERN
     # Matches the 3-line sequence for exiting:
     # movl $1, %eax -> xor %ebx, %ebx -> int $0x80
-    exit_regex = (
+    exit_regex_xor = (
         r"movl\s+\$1,\s+%eax\s+"
         r"xor\s+%ebx,\s+%ebx\s+"
+        r"int\s+\$0x80"
+    )
+
+    exit_regex_mov = (
+        r"movl\s+\$1,\s+%eax\s+"
+        r"mov\s+\$0,\s+%ebx\s+"
         r"int\s+\$0x80"
     )
 
@@ -115,7 +124,8 @@ def refactor_syscalls(lines):
     content = re.sub(print_regex, r"int_print_string \1, $\2", content, flags=re.MULTILINE)
     
     # Replace exit block with: m_end
-    content = re.sub(exit_regex, "end", content, flags=re.MULTILINE)
+    content = re.sub(exit_regex_xor, "end", content, flags=re.MULTILINE)
+    content = re.sub(exit_regex_mov, "end", content, flags=re.MULTILINE)
     
     # 4. Split back into a list and return
     return content.split("\n")
@@ -126,7 +136,11 @@ def process_s_file(input_path, output_path):
 
         result = ""
         format_text = ""
-        with open("format.txt", 'r') as format:
+
+        BASE_DIR = Path(__file__).resolve().parent
+        format_path = BASE_DIR / "format.txt"
+
+        with open(format_path) as format:
             format_text = format.read()
 
         VARS, LABELS, MAIN, FUNCTION_RA, SYSCALLS = "", "", "", "", ""
@@ -156,6 +170,9 @@ def process_s_file(input_path, output_path):
             if found_data:
                 if "." in line:
                     new_var_list = line.split()
+                    if len(new_var_list) < 3:
+                        continue
+
                     var_name = new_var_list[0].replace(":", "")
                     var_value = new_var_list[2]
                     if ".long" in line or ".word" in line or ".byte" in line:
@@ -207,10 +224,10 @@ def process_s_file(input_path, output_path):
         # Insert main
         inserted_end = False
         for instr in main_instructions:
-            if not inserted_end and "m_label" in instr:
-                MAIN += f"    m_end\n    {instr}\n"
-                inserted_end = True
-            else:
+#            if not inserted_end and "m_label" in instr:
+#                MAIN += f"    m_end\n    {instr}\n"
+#                inserted_end = True
+#            else:
                 MAIN += f"    {instr}\n"\
 
         # Add Function Return Adresses
