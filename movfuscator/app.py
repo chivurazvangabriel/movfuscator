@@ -3,8 +3,9 @@ import os
 from s_processor import process_s_file
 
 app = Flask(__name__)
-UPLOAD_FOLDER = 'uploads'
-OUTPUT_FOLDER = 'outputs'
+
+UPLOAD_FOLDER = os.path.join('movfuscator', 'uploads')
+OUTPUT_FOLDER = os.path.join('movfuscator', 'outputs')
 
 # Ensure directories exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -34,7 +35,7 @@ def convert():
     try:
         # Run your custom processing logic
         process_s_file(input_path, output_path)
-        return send_file(output_path, as_attachment=True)
+        return send_file(output_path.replace("movfuscator\\", ""), as_attachment=True)
     except Exception as e:
         return f"Processing Error: {str(e)}", 500
 
