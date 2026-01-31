@@ -3,7 +3,7 @@ from pathlib import Path
 
 function_ras = []
 
-def make_ra(ra: str):
+def make_ra(ra: tuple[str, int]):
     return f"{ra[0]}_ra{ra[1]}"
 
 def convert_arg(arg: str):
@@ -41,7 +41,6 @@ def convert_instr(instr_line: str):
     if ":" in instr:
         ret = f"m_label {instr.replace(":", "")}"
     elif "(%ebp)" in instr_line:
-        scale = 0
         if instr == "mov" and "(%ebp)" in args[0]:
             scale = int(args[0].replace("(%ebp)", ""))
             ret = f"m_movmbp ${scale}, {args[1]}"
