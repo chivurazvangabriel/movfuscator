@@ -49,7 +49,7 @@ This, of course, comes with its own limitations.
 
 ## Known issues / Not implemented yet
 * Arrays (Easily implementable, but we were nearing the deadline and had to cut corners)
-* All jumps/function calls require a return address to be manually written as a label to come back to (check m_jmp implementation; this is handled automatically by the parser)
+* All function calls require a return address to be manually written as a label to come back to (check m_call implementation; this is handled automatically by the parser)
 * 'lea' as addresses are also virtualized
 * Reading from memory using pointer arithmetic (aside from the stack; NOTE: When addressing relative to %ebp (or mbp in this case), use m_movmbp)
 * Some instructions were not movfuscated: int, jmp (for looping main)
